@@ -1,0 +1,7 @@
+streamlit
+requests
+fastapi
+uvicorn
+transformers
+torch
+pymongo
