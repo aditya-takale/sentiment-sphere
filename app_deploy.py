@@ -6,22 +6,15 @@ st.set_page_config(page_title="Sentiment Analysis", layout="centered")
 
 st.title("Sentiment Analysis")
 
-# -------- LOAD MODELS --------
+# -------- LOAD MODEL --------
 @st.cache_resource
-def load_models():
-    sentiment = pipeline(
+def load_model():
+    return pipeline(
         "sentiment-analysis",
         model="distilbert-base-uncased-finetuned-sst-2-english"
     )
-    
-    caption = pipeline(
-        "image-to-text",
-        model="nlpconnect/vit-gpt2-image-captioning"
-    )
-    
-    return sentiment, caption
 
-sentiment_model, caption_model = load_models()
+sentiment_model = load_model()
 
 # =========================
 # TEXT INPUT
@@ -44,7 +37,7 @@ if st.button("Analyze Text"):
         st.warning("Enter text")
 
 # =========================
-# IMAGE INPUT
+# IMAGE INPUT (SAFE VERSION)
 # =========================
 st.subheader("Image Input")
 
@@ -54,16 +47,7 @@ if uploaded_file:
     image = Image.open(uploaded_file)
     st.image(image, caption="Uploaded Image", use_column_width=True)
 
-    if st.button("Analyze Image"):
-        with st.spinner("Analyzing image..."):
-            caption = caption_model(image)[0]["generated_text"]
-            result = sentiment_model(caption)[0]
-
-        st.write(f"Caption: {caption}")
-
-        if result["label"] == "POSITIVE":
-            st.success("Positive")
-        else:
-            st.error("Negative")
-
-        st.write(f"Confidence: {round(result['score'], 3)}")
+    st.info(
+        "⚠️ Image sentiment analysis is available in the local version. "
+        "This cloud version shows image preview due to resource limitations."
+    )
